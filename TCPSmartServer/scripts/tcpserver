@@ -1,0 +1,39 @@
+#!/bin/sh
+### TCP Servver
+
+DIRECTORY="/var/opt/TCPSmartServer/"
+SERVER_NAME="TCPSmartServer"
+
+start() {
+
+	if pgrep $SERVER_NAME >/dev/null
+	then
+		echo "$SERVER_NAME is already running"
+	else
+		${DIRECTORY}/bin/TCPSmartServer --daemon 
+		echo "Started TCPServer: [OK]"
+	fi
+}
+
+stop() {
+	## Sending SIG_INT for closing server.
+	pkill -2 TCPSmartServer
+	echo "Stopped TCPServer: [OK]"
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop) 
+	stop
+	;;
+  restart)
+	stop
+	start
+	echo "Restarted TCPServer: [OK]"
+	;;
+  *)
+	echo "*** Usage: $0 {start|stop|restart}"
+	exit 1
+esac
